@@ -26,7 +26,7 @@ class EventController extends Controller
             ...$request->validate([
                 'name' => 'required|string|max:255', // required, type string, max 255 characters
                 'description' => 'nullable|string', // not required (can be null), type string
-                'start_date' => 'required|date', // required, type date
+                'start_time' => 'required|date', // required, type date
                 'end_time' => 'required|date|after:start_time' // required, type date, must be after start_time
             ]),
             'user_id' => 1
@@ -46,9 +46,18 @@ class EventController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Event $event)
     {
-        //
+        $event->update(
+            $request->validate([
+                'name' => 'sometimes|string|max:255',
+                'description' => 'nullable|string',
+                'start_time' => 'sometimes|date',
+                'end_time' => 'sometimes|date|after:start_time'
+            ])
+        );
+
+        return $event;
     }
 
     /**
